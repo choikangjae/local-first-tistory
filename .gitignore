@@ -1,0 +1,11 @@
+.env
+.categories
+.images.toml
+.metadata.toml
+
+markdowns/*
+!markdowns/.gitkeep
+images/*
+!images/.gitkeep
+
+__pycache__/
