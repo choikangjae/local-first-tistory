@@ -52,7 +52,7 @@ def auth():
     if ACCESS_TOKEN is not None:
         print(f"이미 access token이 발급되었습니다. access token = {ACCESS_TOKEN}")
         print(f"다시 발급받고자 하는 경우 {dotenv_path}의 데이터를 지우고 다시 시도해주세요")
-        exit()
+        return
 
     print(f"모든 정보는 {dotenv_path}에 저장됩니다.")
 
@@ -90,5 +90,3 @@ def auth():
         set_key(key_to_set="ACCESS_TOKEN", value_to_set=access_token, dotenv_path=dotenv_path)
         print(f"access token 발급 및 저장 완료. access token = {access_token}")
         print("이제 티스토리 api를 이용하실 수 있습니다")
-
-auth()

@@ -2,6 +2,7 @@ import requests
 from dotenv import load_dotenv
 import os
 import configparser
+from pathlib import Path
 
 load_dotenv()
 config = configparser.ConfigParser()
@@ -29,6 +30,5 @@ def load_categories_from_server():
         config[name] = {}
         config[name]['id'] = id
         config.write(open(CATEGORY_PATH, 'w'))
-    print(f"카테고리 저장 완료. {CATEGORY_PATH}를 확인해주세요")
-
-load_categories_from_server()
+        Path(os.path.join('./markdowns/', name)).mkdir(parents=True, exist_ok=True)
+    print(f"카테고리 저장 및 디렉토리 생성 완료.")
