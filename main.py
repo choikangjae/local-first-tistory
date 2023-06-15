@@ -4,9 +4,11 @@ from dotenv import load_dotenv
 import os
 import hashlib
 import configparser
+from category import CATEGORY_PATH
 
 load_dotenv()
 config = configparser.ConfigParser()
+category_config = configparser.ConfigParser()
 
 APP_ID = os.getenv("APP_ID")
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -15,7 +17,7 @@ REDIRECT_URI = os.getenv("REDIRECT_URI")
 AUTHORIZATION_CODE = os.getenv("AUTHORIZATION_CODE")
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 MARKDOWN_METADATA_PATH = ".metadata.toml"
-CATEGORIES = config.read(".categories.toml")
+CATEGORIES = category_config.read(CATEGORY_PATH)
 
 default_data = {
         "access_token": ACCESS_TOKEN,
@@ -23,7 +25,7 @@ default_data = {
         "output": "json",
         }
 
-def load_raw_markdown(path: str):
+def load_raw_markdown(path: str, category: str):
     raw_md = open(path, "r").read()
     sha1 = hashlib.sha1(raw_md.encode()).hexdigest()
 # Convert it to HTML metadata and content
@@ -58,9 +60,8 @@ title: your_title
     else:
         metadata["visibility"] = "0"
 
-    if "category" in meta:
-        category = meta['category'][0].lower()
-        metadata["category"] = config[category]['id']
+    if category != 'markdowns':
+        metadata["category"] = category_config[category]['id']
     else:
         metadata["category"] = "0"
 
@@ -71,7 +72,6 @@ title: your_title
 
     if "acceptcomment" in meta:
         accept_comment: str = meta['acceptcomment'][0].lower()
-        print(accept_comment)
         if accept_comment == "yes" or accept_comment == "y" or accept_comment == "true" or accept_comment == "t" or accept_comment == '허용' or accept_comment == "1":
             metadata["acceptComment"] = "1"
         elif accept_comment == "no" or accept_comment == "n" or accept_comment == "false" or accept_comment == "f" or accept_comment == '거부' or accept_comment == "0":
@@ -117,7 +117,8 @@ def traverse_markdowns():
             if file.endswith('.md'):
                 path = os.path.join(subdir, file)
                 # Load raw markdown
-                html_content, sha1, metadata = load_raw_markdown(path)
+                category = subdir.removeprefix("markdowns/")
+                html_content, sha1, metadata = load_raw_markdown(path, category)
 
                 config.read(MARKDOWN_METADATA_PATH)
                 # If saved metadata does not exist, upload the post and save the metadata
