@@ -20,6 +20,13 @@ Do not be afraid of shutting down blog server. It will help you organize the art
 
 ### Usage
 
+There are 4 scripts: `main.py`, `image.py`, `category.py` and `auth.py`.
+You have to run each script  manually when you need it. (since it sends HTTP requests every time, I don't want to be burden.)
+- `main.py`: It detects created or modified files on `./markdowns/` and sends requests, save the metadata of it. You can `crontab` this, it won't send any HTTP requests it hasn't been changed but it might consume some computing power to hash the `markdown` files.
+- `image.py`: It traverses on `./images/` and sends requests, save the `url` of it at `./.images.toml`. It will skip the already saved images.
+- `category.py`: To get the pair of `id` and `category`, you have to run this. After that, only when you updated `category` on the blog.
+- `auth.py`: Only once for the first time to get `access token` or your `access token` is expired (maybe).
+
 #### Retrieve Access Token
 
 Briefly, `App ID` and `redirect uri` will be used to get `Authentication code`(or just `code`); `App ID`, `redirect uri` and `Authentication code` will be used to get `Access token`.
@@ -54,20 +61,51 @@ Put the meta data on very top of the `markdown` file like:
 ```
 ---
 title: your_title [Mandatory]
-visibility: 0(private) or 1(protected) or 3(public) (default: 0) [Optional]
-category: category_id (default: 0) [Optional]
+visibility: [Optional]
+category: [Optional]
 published: TIMESTAMP (default: current_time) [Optional]
 tag: tag1,tag2,tag3 (default: '') [Optional]
-acceptComment: 0(to deny) or 1(to accept) (default: '1') [Optional]
+acceptComment: [Optional]
 ---
 ```
 
-You will notice that only title is mandatory and not the others. So if you want publicly published article:
+- `visibility` (default: `private`):
+    - `public`: `public` or `3` or `공개`
+    - `protected`: `protected` or `1` or `보호`
+    - `private`: `private` or `0` or `비공개`
+- `category`:
+    - If you haven't, run this:
+    ```
+    python3 category.py
+    ```
+    - `Categories` will be saved at `./.categories.toml` in lower case
+    - e.g.:
+    ```
+    [category1]
+    id = 1234
+
+    [category1/category2]
+    id = 5678
+    ```
+    - You can use it like:
+    ```
+    ---
+    category: category1/category2
+    ---
+    ```
+- `acceptComment` (default: `yes`):
+    - To accept: `yes` or `y` or `true` or `t` or `허용` or `1`
+    - To deny: `no` or `n` or `false` or `f` or `거부` or `0`
+
+You will notice that only title is mandatory and not the others. This is the example:
 
 ```
 ---
 title: This is my first article!
-visibility: 3
+visibility: public
+category: category1/category2
+acceptComment: 허용
+tag: my article, first issue
 ---
 
 And here it is article content!

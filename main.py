@@ -15,6 +15,7 @@ REDIRECT_URI = os.getenv("REDIRECT_URI")
 AUTHORIZATION_CODE = os.getenv("AUTHORIZATION_CODE")
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 MARKDOWN_METADATA_PATH = ".metadata.toml"
+CATEGORIES = config.read(".categories.toml")
 
 default_data = {
         "access_token": ACCESS_TOKEN,
@@ -45,12 +46,21 @@ title: your_title
 ---
 """)
     if "visibility" in meta:
-        metadata["visibility"] = meta["visibility"][0]
+        visibility = meta['visibility'][0].lower()
+        if visibility == "public" or visibility == "3" or visibility == "공개":
+            metadata["visibility"] = "3"
+        elif visibility == "protected" or visibility == "1" or visibility == "보호":
+            metadata["visibility"] = "1"
+        elif visibility == "private" or visibility == "0" or visibility == "비공개":
+            metadata["visibility"] = "0"
+        else:
+            metadata["visibility"] = "0"
     else:
         metadata["visibility"] = "0"
 
     if "category" in meta:
-        metadata["category"] = meta["category"][0]
+        category = meta['category'][0].lower()
+        metadata["category"] = config[category]['id']
     else:
         metadata["category"] = "0"
 
@@ -59,8 +69,15 @@ title: your_title
     else:
         metadata["tag"] = ""
 
-    if "acceptComment" in meta:
-        metadata["acceptComment"] = meta["acceptComment"][0]
+    if "acceptcomment" in meta:
+        accept_comment: str = meta['acceptcomment'][0].lower()
+        print(accept_comment)
+        if accept_comment == "yes" or accept_comment == "y" or accept_comment == "true" or accept_comment == "t" or accept_comment == '허용' or accept_comment == "1":
+            metadata["acceptComment"] = "1"
+        elif accept_comment == "no" or accept_comment == "n" or accept_comment == "false" or accept_comment == "f" or accept_comment == '거부' or accept_comment == "0":
+            metadata["acceptComment"] = "0"
+        else:
+            metadata["acceptComment"] = "1"
     else:
         metadata["acceptComment"] = "1"
     
@@ -121,15 +138,5 @@ def traverse_markdowns():
     print(f"""{upload_count} 개의 포스트 업로드 완료.
 {modified_count} 개의 포스트 수정 완료.
 스크립트를 종료합니다.""")
-def load_categories_from_server():
-    category_url = "https://www.tistory.com/apis/category/list"
-    category_data = default_data
-    category_result = requests.get(category_url, params=category_data).json()
-    categories = ""
-    for category in category_result['tistory']['item']['categories']:
-        id = category['id']
-        name = category['label']
-        categories += f"{name}={id}\n"
-    print(categories)
 
 traverse_markdowns()

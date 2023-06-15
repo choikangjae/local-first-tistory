@@ -1,5 +1,5 @@
 .env
-.categories
+.categories.toml
 .images.toml
 .metadata.toml
 
