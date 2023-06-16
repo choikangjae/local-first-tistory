@@ -4,18 +4,9 @@ import os
 import configparser
 from pathlib import Path
 
-load_dotenv()
 category_data = configparser.ConfigParser()
-
-BLOG_NAME = os.getenv("BLOG_NAME")
-ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 CATEGORY_PATH = ".categories.toml"
-
-category_params = {
-        "access_token": ACCESS_TOKEN,
-        "blogName": BLOG_NAME,
-        "output": "json",
-        }
+MARKDOWN_FILE_PATH = "./markdowns/"
 
 def save_category(category):
     category_name = category['label'].lower()
@@ -26,9 +17,19 @@ def save_category(category):
     return category_name
 
 def category_mkdir(category_name):
-    Path(os.path.join('./markdowns/', category_name)).mkdir(parents=True, exist_ok=True)
+    Path(os.path.join(MARKDOWN_FILE_PATH, category_name)).mkdir(parents=True, exist_ok=True)
 
 def load_categories_from_tistory():
+    load_dotenv(override=True)
+    BLOG_NAME = os.getenv("BLOG_NAME")
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+
+    category_params = {
+            "access_token": ACCESS_TOKEN,
+            "blogName": BLOG_NAME,
+            "output": "json",
+            }
+
     print(f"카테고리를 서버에 요청하는 중입니다.. 결과는 {CATEGORY_PATH}에 저장됩니다.")
     category_url = "https://www.tistory.com/apis/category/list"
     category_from_tistory = requests.get(category_url, params=category_params).json()
