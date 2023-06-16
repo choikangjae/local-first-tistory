@@ -113,13 +113,13 @@ def save_post_to_tistory(metadata: dict, content: str):
     print(f'티스토리에 새로운 포스트 등록 완료. url = {post_url}')
     return post_id
 
-def save_metadata(md_metadata: dict, md_rel_path: str, post_id: str, sha1: str):
+def save_metadata(md_metadata, md_rel_path: str, post_id: str, sha1: str):
     md_metadata[md_rel_path] = {}
     md_metadata[md_rel_path]['post_id'] = post_id
     md_metadata[md_rel_path]['sha1'] = sha1
     md_metadata.write(open(MARKDOWN_METADATA_PATH, 'w'))
 
-def modify_metadata(md_rel_path, sha1):
+def modify_metadata(md_metadata, md_rel_path: str, sha1: str):
     md_metadata[md_rel_path]['sha1'] = sha1
     md_metadata.write(open(MARKDOWN_METADATA_PATH, 'w'))
 
@@ -149,7 +149,7 @@ def traverse_markdowns():
                 print(f"post_id:{post_id_from_metadata} 변경 감지. 티스토리 서버로 수정 요청 중..")
 
                 modify_post_in_tistory(post_id_from_metadata, metadata, html_content)
-                modify_metadata(md_rel_path, sha1)
+                modify_metadata(md_metadata, md_rel_path, sha1)
                 modified_count += 1
 
     print(f"""{uploaded_count} 개의 포스트 업로드 완료.
