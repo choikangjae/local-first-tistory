@@ -36,7 +36,7 @@ def traverse_images():
     count = 0
     for subdir, _, files in os.walk("images"):
         for file in files:
-            if file.endswith('.jpg') or file.endswith('.png') or file.endswith('.jpeg') or file.endswith('.gif'):
+            if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
                 image_rel_path = os.path.join(subdir, file)
 
                 image_info.read(IMAGE_INFO_PATH)

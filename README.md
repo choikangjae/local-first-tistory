@@ -121,8 +121,9 @@ For more information, go to [official API](https://tistory.github.io/document-ti
 #### Upload Images
 
 - Put your `image` binaries in `./images/`. 
-
     - It can have depth like `./markdowns/`
+    
+- Make sure images extension end with `.png`, `.jpg`, `.jpeg` or `.gif`.
 
 - Run:
     ```
