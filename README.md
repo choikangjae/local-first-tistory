@@ -1,13 +1,14 @@
 # Local First Tistory
 
-Do not be afraid of shutting down blog server. It will help you organize the articles in `local-first, server-last` rules.
+Do not be afraid of shutting down blog server. It will help you organize the posts in `local-first, server-last` rules.
+
+## Why Use This?
+
+If you've ever been in trouble when the blog server were shut down, (especially the one is big-tech and never expecting abnormal!) this script just for you. You will hold all the data in the local and the script will manage all the things to communicate with the server. You can read the data when you (or the server) are offline or migrate to the other platforms.
 
 ## Table of Contents
-- [Features](#Features)
 - [Installation](#Installation)
 - [Usage](#Usage)
-
-### Features
 
 ### Installation
 
