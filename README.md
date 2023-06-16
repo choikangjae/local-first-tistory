@@ -11,7 +11,7 @@ Do not be afraid of shutting down blog server. It will help you organize the art
 
 ### Installation
 
-- Python >= 3.6
+- Python >= 3.9
 - To install Python dependencies:
 
     ```

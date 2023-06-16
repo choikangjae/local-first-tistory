@@ -28,7 +28,7 @@ def generate_auth_url():
     return f"{auth_url}?{urllib.parse.urlencode(auth_data)}"
 
 # Generate access token
-def generate_access_token():
+def retrieve_access_token():
     load_dotenv(dotenv_path=dotenv_path, override=True)
     APP_ID = os.getenv("APP_ID")
     SECRET_KEY = os.getenv("SECRET_KEY")
@@ -49,12 +49,11 @@ def generate_access_token():
     return access_token
 
 def auth():
+    print(f"모든 정보는 {dotenv_path}에 저장됩니다.")
     if ACCESS_TOKEN is not None:
         print(f"이미 access token이 발급되었습니다. access token = {ACCESS_TOKEN}")
         print(f"다시 발급받고자 하는 경우 {dotenv_path}의 데이터를 지우고 다시 시도해주세요")
         return
-
-    print(f"모든 정보는 {dotenv_path}에 저장됩니다.")
 
     if BLOG_NAME is None:
         print("블로그 이름. 블로그 이름은 https://{{{blog_name}}}.tistory.com에서 확인할 수 있습니다.")
@@ -86,7 +85,7 @@ def auth():
 
     if ACCESS_TOKEN is None:
         print("access token 발급 요청 중..")
-        access_token = generate_access_token()
+        access_token = retrieve_access_token()
         set_key(key_to_set="ACCESS_TOKEN", value_to_set=access_token, dotenv_path=dotenv_path)
         print(f"access token 발급 및 저장 완료. access token = {access_token}")
         print("이제 티스토리 api를 이용하실 수 있습니다")

@@ -1,5 +1,5 @@
 from auth import auth 
-from category import load_categories_from_server
+from category import load_categories_from_tistory
 
 auth()
-load_categories_from_server()
+load_categories_from_tistory()
