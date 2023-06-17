@@ -56,4 +56,5 @@ def traverse_images():
 
     print(f"총 {count} 개의 이미지가 저장되었습니다. url은 '{IMAGE_INFO_PATH}'에서 확인하실 수 있습니다")
 
-traverse_images()
+if __name__ == "__main__":
+    traverse_images()

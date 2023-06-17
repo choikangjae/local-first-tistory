@@ -89,3 +89,6 @@ def auth():
         set_key(key_to_set="ACCESS_TOKEN", value_to_set=access_token, dotenv_path=dotenv_path)
         print(f"access token 발급 및 저장 완료. access token = {access_token}")
         print("이제 티스토리 api를 이용하실 수 있습니다")
+
+if __name__ == "__main__":
+    auth()

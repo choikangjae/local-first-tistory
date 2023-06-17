@@ -156,4 +156,5 @@ def traverse_markdowns():
 {modified_count} 개의 포스트 수정 완료.
 스크립트를 종료합니다.""")
 
-traverse_markdowns()
+if __name__ == "__main__":
+    traverse_markdowns()

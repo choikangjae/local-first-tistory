@@ -39,3 +39,6 @@ def load_categories_from_tistory():
         category_name = save_category(category)
         category_mkdir(category_name)
     print("카테고리 저장 및 디렉토리 생성 완료.")
+
+if __name__ == "__main__":
+    load_categories_from_tistory()
