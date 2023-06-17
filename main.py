@@ -83,7 +83,23 @@ def convert_md_to_html_and_metadata(path: str, category: str):
     raw_md = open(path, "r").read()
     sha1 = hashlib.sha1(raw_md.encode()).hexdigest()
     # Convert it to HTML metadata and content
-    md = markdown.Markdown(extensions=["meta"])
+    extension_configs = {
+        "markdown_link_attr_modifier": {
+            "new_tab": "on",
+            "no_referrer": "external_only",
+            "auto_title": "on",
+        },
+    }
+    md = markdown.Markdown(
+        extensions=[
+            "meta",
+            "fenced_code",
+            "attr_list",
+            "mdx_truly_sane_lists",
+            "markdown_link_attr_modifier",
+        ],
+        extension_configs=extension_configs,
+    )
     html_content = md.convert(raw_md)
     meta = md.Meta
     metadata = convert_metadata(meta, path, category)
@@ -92,6 +108,7 @@ def convert_md_to_html_and_metadata(path: str, category: str):
 
 def modify_post_in_tistory(post_id: str, metadata: dict, content: str):
     modify_url = "https://www.tistory.com/apis/post/modify"
+    print(content)
     modify_params = {
         "postId": post_id,
         "content": content,
