@@ -25,6 +25,7 @@ default_params = {
         "output": "json",
         }
 
+
 def convert_metadata(meta, path: str, category: str) -> dict:
     metadata = {}
 
@@ -41,11 +42,14 @@ title: your_title
 """)
     if "visibility" in meta:
         visibility = meta['visibility'][0].lower()
-        if visibility == "public" or visibility == "3" or visibility == "공개":
+        if (visibility == "public" or visibility == "3"
+                or visibility == "공개"):
             metadata["visibility"] = "3"
-        elif visibility == "protected" or visibility == "1" or visibility == "보호":
+        elif (visibility == "protected" or visibility == "1"
+              or visibility == "보호"):
             metadata["visibility"] = "1"
-        elif visibility == "private" or visibility == "0" or visibility == "비공개":
+        elif (visibility == "private" or visibility == "0"
+              or visibility == "비공개"):
             metadata["visibility"] = "0"
         else:
             metadata["visibility"] = "0"
@@ -64,9 +68,13 @@ title: your_title
 
     if "acceptcomment" in meta:
         accept_comment: str = meta['acceptcomment'][0].lower()
-        if accept_comment == "yes" or accept_comment == "y" or accept_comment == "true" or accept_comment == "t" or accept_comment == '허용' or accept_comment == "1":
+        if (accept_comment == "yes" or accept_comment == "y" or
+            accept_comment == "true" or accept_comment == "t" or
+                accept_comment == '허용' or accept_comment == "1"):
             metadata["acceptComment"] = "1"
-        elif accept_comment == "no" or accept_comment == "n" or accept_comment == "false" or accept_comment == "f" or accept_comment == '거부' or accept_comment == "0":
+        elif (accept_comment == "no" or accept_comment == "n" or
+              accept_comment == "false" or accept_comment == "f" or
+              accept_comment == '거부' or accept_comment == "0"):
             metadata["acceptComment"] = "0"
         else:
             metadata["acceptComment"] = "1"
@@ -74,6 +82,7 @@ title: your_title
         metadata["acceptComment"] = "1"
 
     return metadata
+
 
 def convert_md_to_html_and_metadata(path: str, category: str):
     raw_md = open(path, "r").read()
@@ -84,8 +93,8 @@ def convert_md_to_html_and_metadata(path: str, category: str):
 # pyright: reportGeneralTypeIssues=false
     meta = md.Meta
     metadata = convert_metadata(meta, path, category)
-    
     return html_content, sha1, metadata
+
 
 def modify_post_in_tistory(post_id: str, metadata: dict, content: str):
     modify_url = "https://www.tistory.com/apis/post/modify"
@@ -98,6 +107,7 @@ def modify_post_in_tistory(post_id: str, metadata: dict, content: str):
 
     modify_response = requests.post(modify_url, data=modify_params).json()
     return modify_response['tistory']['status'] == '200'
+
 
 def save_post_to_tistory(metadata: dict, content: str):
     write_url = "https://www.tistory.com/apis/post/write"
@@ -113,15 +123,18 @@ def save_post_to_tistory(metadata: dict, content: str):
     print(f'티스토리에 새로운 포스트 등록 완료. url = {post_url}')
     return post_id
 
+
 def save_metadata(md_metadata, md_rel_path: str, post_id: str, sha1: str):
     md_metadata[md_rel_path] = {}
     md_metadata[md_rel_path]['post_id'] = post_id
     md_metadata[md_rel_path]['sha1'] = sha1
     md_metadata.write(open(MARKDOWN_METADATA_PATH, 'w'))
 
+
 def modify_metadata(md_metadata, md_rel_path: str, sha1: str):
     md_metadata[md_rel_path]['sha1'] = sha1
     md_metadata.write(open(MARKDOWN_METADATA_PATH, 'w'))
+
 
 # Traverse the directory and save or modify post
 def traverse_markdowns():
@@ -134,7 +147,8 @@ def traverse_markdowns():
 
             md_rel_path = os.path.join(subdir, file)
             category = subdir.removeprefix("markdowns/")
-            html_content, sha1, metadata = convert_md_to_html_and_metadata(md_rel_path, category)
+            html_content, sha1, metadata = \
+                convert_md_to_html_and_metadata(md_rel_path, category)
 
             md_metadata.read(MARKDOWN_METADATA_PATH)
             # If saved metadata does not exist, upload the post
@@ -145,10 +159,11 @@ def traverse_markdowns():
 
             # If sha1 is different from saved sha1, modify the post
             elif sha1 != md_metadata[md_rel_path]['sha1']:
-                post_id_from_metadata = md_metadata[md_rel_path]['post_id']
-                print(f"post_id:{post_id_from_metadata} 변경 감지. 티스토리 서버로 수정 요청 중..")
+                post_id = md_metadata[md_rel_path]['post_id']
+                print(f"post_id:{post_id} 변경 감지. \
+                        티스토리 서버로 수정 요청 중..")
 
-                modify_post_in_tistory(post_id_from_metadata, metadata, html_content)
+                modify_post_in_tistory(post_id, metadata, html_content)
                 modify_metadata(md_metadata, md_rel_path, sha1)
                 modified_count += 1
 
@@ -156,5 +171,7 @@ def traverse_markdowns():
 {modified_count} 개의 포스트 수정 완료.
 스크립트를 종료합니다.""")
 
+
 if __name__ == "__main__":
+    pass
     traverse_markdowns()
