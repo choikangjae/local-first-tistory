@@ -136,3 +136,7 @@ For more information, go to [official API](https://tistory.github.io/document-ti
 - Uploaded image url will be stored at `./.images.toml` and you can use `url` when writing markdown.
 
 - Recommend to upload images first before writing your markdowns since you need `url` in `![images](url)`.
+
+#### TODO
+
+- Change it to `watchdog` to monitor directories?
