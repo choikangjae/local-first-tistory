@@ -1,6 +1,8 @@
-Markdown==3.4.3
-python-dotenv==1.0.0
-Requests==2.31.0
+Markdown
+python-dotenv
+Requests
 mdx_truly_sane_lists
-markdown-link-attr-modifier
+markdown_link_attr_modifier
+pyinstaller
+click
 
