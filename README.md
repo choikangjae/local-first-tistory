@@ -95,11 +95,11 @@ Put the meta data on very top of the `markdown` file like:
 
 ```md
 ---
-title: your_title [Mandatory]
-visibility: [Optional]
+title or t or 제목: your_title [Mandatory]
+visibility or vis or v or 공개: [Optional]
 published: TIMESTAMP (default: current_time) [Optional]
-tag: tag1,tag2,tag3 (default: '') [Optional]
-acceptComment: [Optional]
+tag or tags or 태그: tag1,tag2,tag3 (default: '') [Optional]
+acceptComment or ac or comment or 댓글: [Optional]
 ---
 ```
 
@@ -117,9 +117,9 @@ You will notice that only title is mandatory and not the others. This is the exa
 # markdowns/category/example.md
 
 ---
-title: This is my first article!
-visibility: public
-acceptComment: 허용
+t: This is my first article!
+v: public
+ac: 허용
 tag: my article,first issue
 ---
 
