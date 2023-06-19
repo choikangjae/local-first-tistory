@@ -29,6 +29,7 @@ default_params = {
 def convert_metadata(meta, path: str, category: str) -> dict:
     metadata = {}
 
+    # title
     if "title" in meta:
         metadata["title"] = meta["title"][0]
     elif "t" in meta:
@@ -49,6 +50,7 @@ title: your_title
 
     for key in meta:
         key = key.lower()
+        # visibility
         if key in ("visibility", "vis", "v", "공개여부", "공개"):
             visibility = meta[key][0]
             if visibility in ("public", "3", "공개"):
@@ -59,8 +61,10 @@ title: your_title
                 metadata["visibility"] = "0"
             else:
                 metadata["visibility"] = "0"
+        # tag
         if key in ("tag", "tags", "태그"):
             metadata["tag"] = meta[key][0]
+        # acceptComment
         if key in ("acceptcomment", "ac", "comment", "댓글"):
             accept_comment: str = meta[key][0]
             if accept_comment in ("yes", "y", "true", "t", "허용", "1"):
@@ -70,40 +74,11 @@ title: your_title
             else:
                 metadata["acceptComment"] = "1"
 
+    # category
     if category != "markdowns":
         metadata["category"] = category_data[category]["id"]
     else:
         metadata["category"] = "0"
-
-    # if "visibility" in meta or "v" in meta or "vis" in meta:
-    #     visibility = meta["visibility"][0].lower()
-    #     if visibility in ("public", "3", "공개"):
-    #         metadata["visibility"] = "3"
-    #     elif visibility in ("protected", "1", "보호"):
-    #         metadata["visibility"] = "1"
-    #     elif visibility in ("private", "0", "비공개"):
-    #         metadata["visibility"] = "0"
-    #     else:
-    #         metadata["visibility"] = "0"
-    # else:
-    #     metadata["visibility"] = "0"
-
-    # if "tag" in meta:
-    #     metadata["tag"] = meta["tag"][0]
-    # else:
-    #     metadata["tag"] = ""
-
-    # if "acceptcomment" in meta:
-    #     accept_comment: str = meta["acceptcomment"][0].lower()
-    #     if accept_comment in ("yes", "y", "true", "t", "허용", "1"):
-    #         metadata["acceptComment"] = "1"
-    #     elif accept_comment in ("no", "n", "false", "f", "거부", "0"):
-    #         metadata["acceptComment"] = "0"
-    #     else:
-    #         metadata["acceptComment"] = "1"
-    # else:
-    #     metadata["acceptComment"] = "1"
-    print(metadata)
 
     return metadata
 
