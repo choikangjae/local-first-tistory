@@ -27,12 +27,12 @@ to communicate with the server. You can read the data when you
 - To install package:
 
     ```bash
-    pip install tistory-helper
+    pip install local-first-tistory
     ```
 
 ### Quick Start
 
-You can use `tistory-helper` using `$ tistory [command]`.
+You can use `local-first-tistory` using `$ tistory [command]`.
 
 To start off, you run:
 
