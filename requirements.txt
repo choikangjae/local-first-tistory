@@ -3,6 +3,5 @@ python-dotenv
 Requests
 mdx_truly_sane_lists
 markdown_link_attr_modifier
-pyinstaller
 click
 

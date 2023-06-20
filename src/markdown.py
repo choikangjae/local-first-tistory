@@ -4,9 +4,9 @@ from dotenv import load_dotenv
 import os
 import hashlib
 import configparser
-from category import CATEGORY_PATH
+from .env import CATEGORIES_TOML, DOTENV_PATH, METADATA_TOML, MARKDOWNS
 
-load_dotenv()
+load_dotenv(dotenv_path=DOTENV_PATH)
 md_metadata = configparser.ConfigParser()
 category_data = configparser.ConfigParser()
 
@@ -16,8 +16,7 @@ BLOG_NAME = os.getenv("BLOG_NAME")
 REDIRECT_URI = os.getenv("REDIRECT_URI")
 AUTHORIZATION_CODE = os.getenv("AUTHORIZATION_CODE")
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
-MARKDOWN_METADATA_PATH = ".metadata.toml"
-CATEGORIES = category_data.read(CATEGORY_PATH)
+CATEGORIES = category_data.read(CATEGORIES_TOML)
 
 default_params = {
     "access_token": ACCESS_TOKEN,
@@ -142,30 +141,30 @@ def save_metadata(md_metadata, md_rel_path: str, post_id: str, sha1: str):
     md_metadata[md_rel_path] = {}
     md_metadata[md_rel_path]["post_id"] = post_id
     md_metadata[md_rel_path]["sha1"] = sha1
-    md_metadata.write(open(MARKDOWN_METADATA_PATH, "w"))
+    md_metadata.write(open(METADATA_TOML, "w"))
 
 
 def modify_metadata(md_metadata, md_rel_path: str, sha1: str):
     md_metadata[md_rel_path]["sha1"] = sha1
-    md_metadata.write(open(MARKDOWN_METADATA_PATH, "w"))
+    md_metadata.write(open(METADATA_TOML, "w"))
 
 
 # Traverse the directory and save or modify post
 def traverse_markdowns():
     uploaded_count = 0
     modified_count = 0
-    for subdir, _, files in os.walk("markdowns"):
+    for subdir, _, files in os.walk(MARKDOWNS):
         for file in files:
             if not file.endswith(".md"):
                 continue
 
             md_rel_path = os.path.join(subdir, file)
-            category = subdir.removeprefix("markdowns/")
+            category = subdir.removeprefix(MARKDOWNS + "/")
             html_content, sha1, metadata = convert_md_to_html_and_metadata(
                 md_rel_path, category
             )
 
-            md_metadata.read(MARKDOWN_METADATA_PATH)
+            md_metadata.read(METADATA_TOML)
             # If saved metadata does not exist, upload the post
             if md_rel_path not in md_metadata:
                 post_id = save_post_to_tistory(metadata, html_content)

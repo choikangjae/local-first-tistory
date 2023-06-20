@@ -3,14 +3,6 @@
 build/
 dist/
 
-.env
-.categories.toml
-.images.toml
-.metadata.toml
-
-markdowns/*
-!markdowns/.gitkeep
-images/*
-!images/.gitkeep
-
 __pycache__/
+
+/*.egg-info

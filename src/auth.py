@@ -2,9 +2,9 @@ import requests
 import urllib.parse
 from dotenv import load_dotenv, set_key
 import os
+from .env import DOTENV_PATH
 
-dotenv_path = ".env"
-load_dotenv(dotenv_path=dotenv_path)
+load_dotenv(dotenv_path=DOTENV_PATH)
 
 APP_ID = os.getenv("APP_ID")
 BLOG_NAME = os.getenv("BLOG_NAME")
@@ -16,7 +16,7 @@ ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
 # Generate authorize url
 def generate_auth_url():
-    load_dotenv(dotenv_path=dotenv_path, override=True)
+    load_dotenv(dotenv_path=DOTENV_PATH, override=True)
     APP_ID = os.getenv("APP_ID")
     REDIRECT_URI = os.getenv("REDIRECT_URI")
 
@@ -31,7 +31,7 @@ def generate_auth_url():
 
 # Generate access token
 def retrieve_access_token():
-    load_dotenv(dotenv_path=dotenv_path, override=True)
+    load_dotenv(dotenv_path=DOTENV_PATH, override=True)
     APP_ID = os.getenv("APP_ID")
     SECRET_KEY = os.getenv("SECRET_KEY")
     REDIRECT_URI = os.getenv("REDIRECT_URI")
@@ -52,12 +52,12 @@ def retrieve_access_token():
 
 
 def auth():
-    print(f"모든 정보는 {dotenv_path}에 저장됩니다.")
+    print(f"모든 정보는 {DOTENV_PATH}에 저장됩니다.")
     if ACCESS_TOKEN is not None:
         print(f"이미 access token이 발급되었습니다. access token = {ACCESS_TOKEN}")
         print(
             f"다시 발급받고자 하는 경우 \
-                {dotenv_path}의 데이터를 지우고 다시 시도해주세요"
+                {DOTENV_PATH}의 데이터를 지우고 다시 시도해주세요"
         )
         return
 
@@ -67,11 +67,11 @@ def auth():
                 https://{{{blog_name}}}.tistory.com에서 확인할 수 있습니다."
         )
         blog_name = input("블로그 이름을 입력해주세요: ")
-        set_key(key_to_set="BLOG_NAME", value_to_set=blog_name, dotenv_path=dotenv_path)
+        set_key(key_to_set="BLOG_NAME", value_to_set=blog_name, dotenv_path=DOTENV_PATH)
         set_key(
             key_to_set="REDIRECT_URI",
             value_to_set=f"{blog_name}.tistory.com",
-            dotenv_path=dotenv_path,
+            dotenv_path=DOTENV_PATH,
         )
         print("블로그 이름 저장 완료")
 
@@ -81,13 +81,13 @@ def auth():
                 에서 App ID와 Secret Key를 발급받아주세요."
         )
         app_id = input("App ID를 입력해주세요: ")
-        set_key(key_to_set="APP_ID", value_to_set=app_id, dotenv_path=dotenv_path)
+        set_key(key_to_set="APP_ID", value_to_set=app_id, dotenv_path=DOTENV_PATH)
         print("App ID 저장 완료")
 
     if SECRET_KEY is None:
         secret_key = input("Secret Key를 입력해주세요: ")
         set_key(
-            key_to_set="SECRET_KEY", value_to_set=secret_key, dotenv_path=dotenv_path
+            key_to_set="SECRET_KEY", value_to_set=secret_key, dotenv_path=DOTENV_PATH
         )
         print("Secret Key 저장 완료")
 
@@ -103,7 +103,7 @@ def auth():
 : """
         )
         set_key(
-            key_to_set="AUTHORIZATION_CODE", value_to_set=code, dotenv_path=dotenv_path
+            key_to_set="AUTHORIZATION_CODE", value_to_set=code, dotenv_path=DOTENV_PATH
         )
 
         print("code 저장 완료")
@@ -114,7 +114,7 @@ def auth():
         set_key(
             key_to_set="ACCESS_TOKEN",
             value_to_set=access_token,
-            dotenv_path=dotenv_path,
+            dotenv_path=DOTENV_PATH,
         )
         print(f"access token 발급 및 저장 완료. access token = {access_token}")
         print("이제 티스토리 api를 이용하실 수 있습니다")

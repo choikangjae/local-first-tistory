@@ -3,10 +3,9 @@ from dotenv import load_dotenv
 import os
 import configparser
 from pathlib import Path
+from .env import MARKDOWNS, CATEGORIES_TOML
 
 category_data = configparser.ConfigParser()
-CATEGORY_PATH = ".categories.toml"
-MARKDOWN_FILE_PATH = "./markdowns/"
 
 
 def save_category(category):
@@ -14,14 +13,12 @@ def save_category(category):
     id = category["id"]
     category_data[category_name] = {}
     category_data[category_name]["id"] = id
-    category_data.write(open(CATEGORY_PATH, "w"))
+    category_data.write(open(CATEGORIES_TOML, "w"))
     return category_name
 
 
 def category_mkdir(category_name):
-    Path(os.path.join(MARKDOWN_FILE_PATH, category_name)).mkdir(
-        parents=True, exist_ok=True
-    )
+    Path(os.path.join(MARKDOWNS, category_name)).mkdir(parents=True, exist_ok=True)
 
 
 def load_categories_from_tistory():
@@ -35,11 +32,14 @@ def load_categories_from_tistory():
         "output": "json",
     }
 
-    print(f"카테고리를 서버에 요청하는 중입니다.. 결과는 {CATEGORY_PATH}에 저장됩니다.")
+    print(
+        f"카테고리를 서버에 요청하는 중입니다.. \
+            결과는 {CATEGORIES_TOML}에 저장됩니다."
+    )
     category_url = "https://www.tistory.com/apis/category/list"
     category_from_tistory = requests.get(category_url, params=category_params).json()
 
-    category_data.read(CATEGORY_PATH)
+    category_data.read(CATEGORIES_TOML)
     for category in category_from_tistory["tistory"]["item"]["categories"]:
         category_name = save_category(category)
         category_mkdir(category_name)
