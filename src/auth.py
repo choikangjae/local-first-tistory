@@ -56,15 +56,15 @@ def auth():
     if ACCESS_TOKEN is not None:
         print(f"이미 access token이 발급되었습니다. access token = {ACCESS_TOKEN}")
         print(
-            f"다시 발급받고자 하는 경우 \
-                {DOTENV_PATH}의 데이터를 지우고 다시 시도해주세요"
+            f"""다시 발급받고자 하는 경우 \
+{DOTENV_PATH}의 데이터를 지우고 다시 시도해주세요"""
         )
         return
 
     if BLOG_NAME is None:
         print(
-            "블로그 이름. 블로그 이름은 \
-                https://{{{blog_name}}}.tistory.com에서 확인할 수 있습니다."
+            """블로그 이름. 블로그 이름은 \
+https://{{{blog_name}}}.tistory.com에서 확인할 수 있습니다."""
         )
         blog_name = input("블로그 이름을 입력해주세요: ")
         set_key(key_to_set="BLOG_NAME", value_to_set=blog_name, dotenv_path=DOTENV_PATH)
@@ -74,15 +74,17 @@ def auth():
             dotenv_path=DOTENV_PATH,
         )
         print("블로그 이름 저장 완료")
+        print()
 
     if APP_ID is None:
         print(
-            "https://www.tistory.com/guide/api/manage/register \
-                에서 App ID와 Secret Key를 발급받아주세요."
+            """https://www.tistory.com/guide/api/manage/register \
+에서 App ID와 Secret Key를 발급받아주세요."""
         )
         app_id = input("App ID를 입력해주세요: ")
         set_key(key_to_set="APP_ID", value_to_set=app_id, dotenv_path=DOTENV_PATH)
         print("App ID 저장 완료")
+        print()
 
     if SECRET_KEY is None:
         secret_key = input("Secret Key를 입력해주세요: ")
@@ -90,23 +92,25 @@ def auth():
             key_to_set="SECRET_KEY", value_to_set=secret_key, dotenv_path=DOTENV_PATH
         )
         print("Secret Key 저장 완료")
+        print()
 
     if AUTHORIZATION_CODE is None:
         print("다음 url로 접속한 후 code를 발급받아주세요")
         print(generate_auth_url())
+        print()
 
         code = input(
             """code를 입력해주세요. \
-                code는 다음과 같은 형태이며 \
-                리다이렉트 된 주소를 통해 확인할 수 있습니다.
-    https://www.tistory.com/oauth/your_blog_name.tistory.com?code={{{code}}}&state=
-: """
+code는 다음과 같은 형태이며 \
+리다이렉트 된 주소를 통해 확인할 수 있습니다.
+https://www.tistory.com/oauth/your_blog_name.tistory.com?code={{{code}}}&state=: """
         )
         set_key(
             key_to_set="AUTHORIZATION_CODE", value_to_set=code, dotenv_path=DOTENV_PATH
         )
 
         print("code 저장 완료")
+        print()
 
     if ACCESS_TOKEN is None:
         print("access token 발급 요청 중..")
