@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import os
 import configparser
 from pathlib import Path
-from .env import MARKDOWNS, CATEGORIES_TOML
+from .env import MARKDOWNS, CATEGORIES_TOML, DOTENV_PATH
 
 category_data = configparser.ConfigParser()
 
@@ -22,7 +22,7 @@ def category_mkdir(category_name):
 
 
 def load_categories_from_tistory():
-    load_dotenv(override=True)
+    load_dotenv(dotenv_path=DOTENV_PATH, override=True)
     BLOG_NAME = os.getenv("BLOG_NAME")
     ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 
@@ -37,10 +37,14 @@ def load_categories_from_tistory():
             결과는 {CATEGORIES_TOML}에 저장됩니다."
     )
     category_url = "https://www.tistory.com/apis/category/list"
-    category_from_tistory = requests.get(category_url, params=category_params).json()
+    category_from_tistory = requests.get(category_url, params=category_params).json()[
+        "tistory"
+    ]["item"]["categories"]
 
     category_data.read(CATEGORIES_TOML)
-    for category in category_from_tistory["tistory"]["item"]["categories"]:
+    category_data.clear()
+
+    for category in category_from_tistory:
         category_name = save_category(category)
         category_mkdir(category_name)
     print("카테고리 저장 및 디렉토리 생성 완료.")

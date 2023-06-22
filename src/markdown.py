@@ -1,3 +1,5 @@
+# pyright: reportGeneralTypeIssues = false
+
 import requests
 import markdown
 from dotenv import load_dotenv
@@ -25,7 +27,7 @@ default_params = {
 }
 
 
-def convert_metadata(meta, path: str, category: str) -> dict:
+def convert_metadata(meta, path: str, category_id: str) -> dict:
     metadata = {}
 
     # title
@@ -74,15 +76,12 @@ title: your_title
                 metadata["acceptComment"] = "1"
 
     # category
-    if category != "markdowns":
-        metadata["category"] = category_data[category]["id"]
-    else:
-        metadata["category"] = "0"
+    metadata["category"] = category_id
 
     return metadata
 
 
-def convert_md_to_html_and_metadata(path: str, category: str):
+def convert_md_to_html_and_metadata(path: str, category_id: str):
     raw_md = open(path, "r").read()
     sha1 = hashlib.sha1(raw_md.encode()).hexdigest()
     # Convert it to HTML metadata and content
@@ -105,7 +104,7 @@ def convert_md_to_html_and_metadata(path: str, category: str):
     )
     html_content = md.convert(raw_md)
     meta = md.Meta
-    metadata = convert_metadata(meta, path, category)
+    metadata = convert_metadata(meta, path, category_id)
     return html_content, sha1, metadata
 
 
@@ -137,15 +136,17 @@ def save_post_to_tistory(metadata: dict, content: str):
     return post_id
 
 
-def save_metadata(md_metadata, md_rel_path: str, post_id: str, sha1: str):
-    md_metadata[md_rel_path] = {}
-    md_metadata[md_rel_path]["post_id"] = post_id
-    md_metadata[md_rel_path]["sha1"] = sha1
+def save_metadata(md_metadata, file: str, post_id: str, sha1: str, category_id: str):
+    md_metadata[file] = {}
+    md_metadata[file]["post_id"] = post_id
+    md_metadata[file]["category_id"] = category_id
+    md_metadata[file]["sha1"] = sha1
+
     md_metadata.write(open(METADATA_TOML, "w"))
 
 
-def modify_metadata(md_metadata, md_rel_path: str, sha1: str):
-    md_metadata[md_rel_path]["sha1"] = sha1
+def modify_metadata(md_metadata, file: str, sha1: str):
+    md_metadata[file]["sha1"] = sha1
     md_metadata.write(open(METADATA_TOML, "w"))
 
 
@@ -160,27 +161,32 @@ def traverse_markdowns():
 
             md_rel_path = os.path.join(subdir, file)
             category = subdir.removeprefix(MARKDOWNS + "/")
+            category_id = category_data.get(category, "id", fallback="0")
+
             html_content, sha1, metadata = convert_md_to_html_and_metadata(
-                md_rel_path, category
+                md_rel_path, category_id
             )
 
             md_metadata.read(METADATA_TOML)
             # If saved metadata does not exist, upload the post
-            if md_rel_path not in md_metadata:
+            if file not in md_metadata:
                 post_id = save_post_to_tistory(metadata, html_content)
-                save_metadata(md_metadata, md_rel_path, post_id, sha1)
+                save_metadata(md_metadata, file, post_id, sha1, category_id)
                 uploaded_count += 1
 
             # If sha1 is different from saved sha1, modify the post
-            elif sha1 != md_metadata[md_rel_path]["sha1"]:
-                post_id = md_metadata[md_rel_path]["post_id"]
+            elif (
+                sha1 != md_metadata[file]["sha1"]
+                and category_id == md_metadata[file]["category_id"]
+            ):
+                post_id = md_metadata[file]["post_id"]
                 print(
                     f"post_id:{post_id} 변경 감지. \
                         티스토리 서버로 수정 요청 중.."
                 )
 
                 modify_post_in_tistory(post_id, metadata, html_content)
-                modify_metadata(md_metadata, md_rel_path, sha1)
+                modify_metadata(md_metadata, file, sha1)
                 modified_count += 1
 
     print(
