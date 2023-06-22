@@ -1,4 +1,5 @@
 import os
+import bump
 from setuptools import setup, find_packages
 
 
@@ -17,7 +18,7 @@ requirements = [
 
 setup(
     name="local-first-tistory",
-    version="0.0.1",
+    version="0.0.2",
     author="Kangjae Choi",
     author_email="choikj33@gmail.com",
     description="It will help you to manage locally saved markdown \
